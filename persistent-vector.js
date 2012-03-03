@@ -46,7 +46,7 @@ PersistentVector.prototype = {
       if(i >= this.tailOff()) {
         newTail = this.tail.slice(0);
         newTail[i & 0x01f] = val;
-        return new PersistentVector(this.cnt, this.shift this.root, newTail);
+        return new PersistentVector(this.cnt, this.shift, this.root, newTail);
       }
       return new PersistentVector(this.cnt, this.shift, this.doAssoc(shift, root, i, val), this.tail);
     }
@@ -60,7 +60,7 @@ PersistentVector.prototype = {
     if(level === 0) {
       ret[i & 0x01f] = val;
     } else {
-      int subidx = (i >>> level) & 0x01f;
+      var subidx = (i >>> level) & 0x01f;
       ret[subidx] = this.doAssoc(level-5, node[subidx], i, val);
     }
     return ret;
@@ -70,18 +70,21 @@ PersistentVector.prototype = {
   },
   cons: function(val) {
     var i = this.cnt;
-    if(cnt - this.tailOff() < 32) {
-      var newTail = this.tail.slice(0);
-      newTail.push(val);
-      return new PersistentVector(cnt+1, this.shift, this.root, newTail);
+    if((this.cnt - this.tailOff()) < 32) {
+      var newtail = this.tail.slice(0);
+      newtail.push(val);
+      return new PersistentVector(this.cnt+1, this.shift, this.root, newtail);
     }
     var newroot,
         tailnode = this.tail,
         newshift = this.shift;
-    if((cnt >>> 5) > (1 << shift)) {
+    if((this.cnt >>> 5) > (1 << this.shift)) {
       newroot = new Array(32);
+      newroot[0] = this.root;
+      newroot[1] = this.newPath(this.shift, tailnode);
+      newshift += 5;
     } else {
-      newroot = this.pushTail(this.shift, this.root, this.tailNode);
+      newroot = this.pushTail(this.shift, this.root, tailnode);
     }
     return new PersistentVector(this.cnt+1, newshift, newroot, [val]);
   },
@@ -150,3 +153,24 @@ PersistentVector.prototype = {
 };
 
 var EMPTY = new PersistentVector(0, 5, EMPTY_NODE, []);
+
+function time(f) {
+  var start = new Date();
+  f();
+  console.log((new Date())-start);
+}
+
+time(function() {
+  for(var i = 0; i < 1e6; i++) {
+    new PersistentVector(0, 5, EMPTY_NODE, []);
+  }
+});
+
+time(function() {
+  var v = new PersistentVector(0, 5, EMPTY_NODE, []);
+  for(var i = 0; i < 1e4; i++) {
+    v = v.cons(i);
+  }
+  console.log("count", v.count());
+  //console.log(v.nth_1(0));
+})
