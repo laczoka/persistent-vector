@@ -96,7 +96,7 @@ PersistentVector.prototype = {
       nodeToInsert = tailnode;
     } else {
       var child = parent[subidx];
-      nodeToInsert = (child != null) ? this.pushTail(level-5,child,tailnode) : this.newPath(level-5, tailnode);
+      nodeToInsert = (child != null) ? this.pushTail(level-5, child, tailnode) : this.newPath(level-5, tailnode);
     }
     ret[subidx] = nodeToInsert;
     return ret;
@@ -108,6 +108,7 @@ PersistentVector.prototype = {
     }
     var ret = new Array(32);
     ret[0] = this.newPath(level-5, node);
+    return ret;
   },
   empty: function() {
     return EMPTY;
@@ -168,12 +169,39 @@ time(function() {
 });
 */
 
+var v = new PersistentVector(0, 5, EMPTY_NODE, []);
 time(function() {
-  var v = new PersistentVector(0, 5, EMPTY_NODE, []);
-  for(var i = 0; i < 100000; i++) {
+  for(var i = 0; i < 1000000; i++) {
     v = v.cons(i);
   }
   console.log("size:", v.count());
   console.log("val at front", v.nth_1(0));
-  console.log("val at end", v.nth_1(9999));
-})
+  console.log("val at end", v.nth_1(999999));
+  for(var i = 0; i < 1000000; i++) {
+    v.nth_1(999999);
+  }
+});
+
+time(function() {
+  for(var i = 0; i < 1000000; i++) {
+    v.nth_1(999999);
+  }
+});
+
+v = v.cons("foo");
+console.log(v.nth_1(v.count()-1));
+
+var a = [];
+time(function() {
+  for(var i = 0; i < 1000000; i++) {
+    a.push(i);
+  }
+  console.log("size:", a.length);
+  console.log("val at front", a[0]);
+  console.log("val at end", a[999999]);
+});
+time(function() {
+  for(var i = 0; i < 1000000; i++) {
+    a[999999];
+  }
+});
