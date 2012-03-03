@@ -48,7 +48,7 @@ PersistentVector.prototype = {
         newTail[i & 0x01f] = val;
         return new PersistentVector(this.cnt, this.shift, this.root, newTail);
       }
-      return new PersistentVector(this.cnt, this.shift, this.doAssoc(shift, root, i, val), this.tail);
+      return new PersistentVector(this.cnt, this.shift, this.doAssoc(this.shift, this.root, i, val), this.tail);
     }
     if(i === this.cnt) {
       return this.cons(val);
@@ -174,9 +174,6 @@ time(function() {
   for(var i = 0; i < 1000000; i++) {
     v = v.cons(i);
   }
-  console.log("size:", v.count());
-  console.log("val at front", v.nth_1(0));
-  console.log("val at end", v.nth_1(999999));
   for(var i = 0; i < 1000000; i++) {
     v.nth_1(999999);
   }
@@ -196,9 +193,6 @@ time(function() {
   for(var i = 0; i < 1000000; i++) {
     a.push(i);
   }
-  console.log("size:", a.length);
-  console.log("val at front", a[0]);
-  console.log("val at end", a[999999]);
 });
 time(function() {
   for(var i = 0; i < 1000000; i++) {
