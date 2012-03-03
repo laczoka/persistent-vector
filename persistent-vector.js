@@ -1,4 +1,4 @@
-var EMPTY_NODE = [];
+var EMPTY_NODE = new Array(32);
 
 function PersistentVector (cnt, shift, root, tail) {
   this.cnt = 0;
@@ -7,13 +7,13 @@ function PersistentVector (cnt, shift, root, tail) {
   this.tail = tail;
 }
 
-function PersistentVectorFromArray(arr) {
+function fromArray(arr) {
 }
 
 PersistentVector.prototype = {
   /* should inline */
   tailOff: function() {
-    if(this.this.cnt < 32) {
+    if(this.cnt < 32) {
       return 0;
     }
     return ((this.cnt-1) >>> 5) << 5;
@@ -73,13 +73,13 @@ PersistentVector.prototype = {
     if(cnt - this.tailOff() < 32) {
       var newTail = this.tail.slice(0);
       newTail.push(val);
-      return new PersistentVector(cnt+1, shift, root, newTail);
+      return new PersistentVector(cnt+1, this.shift, this.root, newTail);
     }
     var newroot,
-        tailnode = new Node(this.root.edit, this.tail),
+        tailnode = this.tail,
         newshift = this.shift;
     if((cnt >>> 5) > (1 << shift)) {
-      newroot = new Node(this.root.edit);
+      newroot = new Array(32);
     } else {
       newroot = this.pushTail(this.shift, this.root, this.tailNode);
     }
@@ -87,24 +87,24 @@ PersistentVector.prototype = {
   },
   pushTail: function(level, parent, tailnode) {
     var subidx = ((cnt-1) >>> level) & 0x01f,
-        ret = new Node(parent.edit, parent.slice(0)),
+        ret = parent.slice(0),
         nodeToInsert;
     if(level === 5) {
       nodeToInsert = tailnode;
     } else {
       var child = parent.arrya[subidx];
-      nodeToInsert = (child != null) ? this.pushTail(level-5,child,tailnode) : this.newPath(root.edit,level-5, tailnode);
+      nodeToInsert = (child != null) ? this.pushTail(level-5,child,tailnode) : this.newPath(level-5, tailnode);
     }
     ret[subidx] = nodeToInsert;
     return ret;
   },
-  newPath: function(edit, level, node) {
+  newPath: function(level, node) {
     /* probably can loop in place to allow for inlining self call */
     if(level === 0) {
       return node;
     }
-    var ret = new Node(edit);
-    ret[0] = this.newPath(edit, level-5, node);
+    var ret = new Array(32);
+    ret[0] = this.newPath(level-5, node);
   },
   empty: function() {
     return EMPTY;
@@ -136,12 +136,15 @@ PersistentVector.prototype = {
       if(newchild == null && subidx == 0) {
         return null;
       } else {
-        var ret = new Node(root.edit, node.slice(0));
+        var ret = node.slice(0);
         return ret;
       }
     } else if(subidx === 0) {
+      return null;
     } else {
-      var ret = new Node(this.root.edit, )
+      var ret = this.node.slice(0);
+      array[subidx] = null;
+      return ret;
     }
   }
 };
