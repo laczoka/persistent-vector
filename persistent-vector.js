@@ -7,9 +7,6 @@ function PersistentVector (cnt, shift, root, tail) {
   this.tail = tail;
 }
 
-function fromArray(arr) {
-}
-
 PersistentVector.prototype = {
   /* should inline */
   tailOff: function() {
@@ -44,9 +41,9 @@ PersistentVector.prototype = {
   assocN: function(i, val) {
     if(i >= 0 && i < this.cnt) {
       if(i >= this.tailOff()) {
-        newTail = this.tail.slice(0);
-        newTail[i & 0x01f] = val;
-        return new PersistentVector(this.cnt, this.shift, this.root, newTail);
+        newtail = this.tail.slice(0);
+        newtail[i & 0x01f] = val;
+        return new PersistentVector(this.cnt, this.shift, this.root, newtail);
       }
       return new PersistentVector(this.cnt, this.shift, this.doAssoc(this.shift, this.root, i, val), this.tail);
     }
@@ -79,7 +76,7 @@ PersistentVector.prototype = {
         tailnode = this.tail,
         newshift = this.shift;
     if((this.cnt >>> 5) > (1 << this.shift)) {
-      newroot = new Array(32);
+      newroot = EMPTY_NODE.slice(0);
       newroot[0] = this.root;
       newroot[1] = this.newPath(this.shift, tailnode);
       newshift += 5;
@@ -106,7 +103,7 @@ PersistentVector.prototype = {
     if(level === 0) {
       return node;
     }
-    var ret = new Array(32);
+    var ret = EMPTY_NODE.slice(0);
     ret[0] = this.newPath(level-5, node);
     return ret;
   },
