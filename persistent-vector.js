@@ -155,21 +155,21 @@ PersistentVector.prototype = {
 
 var EMPTY = new PersistentVector(0, 5, EMPTY_NODE, []);
 
+/*
 function time(f) {
   var start = new Date();
   f();
   console.log((new Date())-start);
 }
 
-/*
 time(function() {
   for(var i = 0; i < 1e6; i++) {
     new PersistentVector(0, 5, EMPTY_NODE, []);
   }
 });
-*/
 
 var v = new PersistentVector(0, 5, EMPTY_NODE, []);
+
 time(function() {
   for(var i = 0; i < 1000000; i++) {
     v = v.cons(i);
@@ -199,3 +199,4 @@ time(function() {
     a[999999];
   }
 });
+*/
