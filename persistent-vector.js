@@ -92,11 +92,11 @@ PersistentVector.prototype = {
 
     /*
      * | parent.slice(0)[ subidx1 <- tailnode ] if level1 == 5
-     * | parent.slice(0)[subidx1 <- newPath1 ] if level1 != 5 && child1 == null
-     * | parent.slice(0)[subidx1 <- parent2.slice(0)[subidx2 <- tailnode ] ] if level1 !=5 && child1 != null && level2 == 5
-     * | parent.slice(0)[subidx1 <- parent2.slice(0)[subidx2 <- newPath2 ] ] ...
-     * | parent.slice(0)[subidx1 <- parent2.slice(0)[subidx2 <- parent3.slice(0)[subidx3 <- tailnode ] ] ...
-     * | parent.slice(0)[subidx1 <- parent2.slice(0)[subidx2 <- parent3.slice(0)[subidx3 <- newPath3 ] ] ...
+     * | parent.slice(0)[ subidx1 <- newPath1 ] if level1 != 5 && child1 == null
+     * | parent.slice(0)[ subidx1 <- parent2.slice(0)[subidx2 <- tailnode ] ] if level1 !=5 && child1 != null && level2 == 5
+     * | parent.slice(0)[ subidx1 <- parent2.slice(0)[subidx2 <- newPath2 ] ] ...
+     * | parent.slice(0)[ subidx1 <- parent2.slice(0)[subidx2 <- parent3.slice(0)[subidx3 <- tailnode ] ] ...
+     * | parent.slice(0)[ subidx1 <- parent2.slice(0)[subidx2 <- parent3.slice(0)[subidx3 <- newPath3 ] ] ...
      */
 
     pushTail: function(level, parent, tailnode) {
@@ -113,7 +113,7 @@ PersistentVector.prototype = {
             } else {
                 lchild = lparent[lsubidx];
                 if (lchild == null) {
-                    lret[lsubidx] = this.newPath(level-5, tailnode);
+                    lret[lsubidx] = this.newPath(llevel-5, tailnode);
                     break;
                 } else {
                     lret[lsubidx] = lparent.slice(0);
@@ -188,6 +188,7 @@ var EMPTY = new PersistentVector(0, 5, EMPTY_NODE, []);
 
     laczoka.PersistentVector = PersistentVector;
     laczoka.EMPTY = EMPTY;
+    laczoka.EMPTY_NODE = EMPTY_NODE;
 
 })();
 
