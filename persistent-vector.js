@@ -1,3 +1,7 @@
+var laczoka = {};
+
+(function() {
+
 var EMPTY_NODE = new Array(32);
 
 function PersistentVector (cnt, shift, root, tail) {
@@ -182,6 +186,10 @@ PersistentVector.prototype = {
 
 var EMPTY = new PersistentVector(0, 5, EMPTY_NODE, []);
 
+    laczoka.PersistentVector = PersistentVector;
+    laczoka.EMPTY = EMPTY;
+
+})();
 
 /*
 function time(f, msg) {
@@ -190,6 +198,7 @@ function time(f, msg) {
     print(msg + " " + ((new Date())-start) + " ms");
     return res;
 }
+
 
 function build_array() {
     var a = [];
@@ -202,19 +211,13 @@ function build_array() {
 }
 
 function build_pvec() {
-    var v = EMPTY;
+    var v = laczoka.EMPTY;
     for(var i = 0; i < 1000000; i++) {
         v = v.cons(i);
     }
     return v;
 }
-function build_pvec2() {
-    var v = EMPTY2;
-    for(var i = 0; i < 1000000; i++) {
-        v = v.cons(i);
-    }
-    return v;
-}
+
 //a = time(build_array, "Array built in");
-// pv = time(build_pvec, "Pvec built in");
-// pv2 = time(build_pve2c, "Pvec (no recursion) built in");
+pv = time(build_pvec, "Pvec built in");
+ */
