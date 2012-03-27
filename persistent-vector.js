@@ -126,7 +126,7 @@ PersistentVector.prototype = {
             }
 
         } while (1);
-        return ret;
+        return lret;
     },
 
     newPath: function(level, node) {
